@@ -1,3 +1,12 @@
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+
+# route name
+homepage:
+    # route path
+    path: /
+    # route parameters
+    defaults:
+        # NamespaceBundle : NameController : homepageAction
+        _controller: AppBundle:Main:homepage

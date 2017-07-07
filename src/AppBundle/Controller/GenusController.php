@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Genus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,14 +19,59 @@ use Symfony\Component\HttpFoundation\Response;
 
 class GenusController extends Controller
 {
+
     /**
-     * @Route("/genus/{genusName}")
+     * @Route("/genus/new")
+     */
+    public function newAction()
+    {
+        //Create new Object of Genus and set name
+        $genus = new Genus();
+        $genus->setName('Cotapus'.rand(1,100));
+        $genus->setSubFamily('Octopodinaie');
+        $genus->setSpeciesCount(rand(1,999999));
+
+        //Get manager
+        $em = $this->getDoctrine()->getManager();
+
+        // Add row into db
+        $em->persist($genus);
+        $em->flush();
+
+        return new Response('<html><body>Genus created</body></html>');
+    }
+
+    /**
+     * @Route("/genus");
+     */
+    public function listAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $genuses = $em->getRepository('AppBundle:Genus')
+            ->findAllPublishedOrderedBySize();
+
+
+        return $this->render('genus/list.html.twig', [
+            'genuses' => $genuses,
+        ]);
+    }
+
+    /**
+     * @Route("/genus/{genusName}", name="genus_show")
      */
     public function showAction($genusName)
     {
-        //Some string
-        $funFact = 'Octopuses can change the color of their body in just *three-tenths* of a second!';
+        $em = $this->getDoctrine()->getManager();
+        $genus = $em->getRepository('AppBundle:Genus')
+            ->findOneBy([
+                'name' => $genusName
+            ]);
 
+        if(!$genus) {
+            throw $this->createNotFoundException('No genus found');
+        }
+        /*
         $cache = $this->get('doctrine_cache.providers.my_markdown_cache');
         $key = md5($funFact);
         if($cache->contains($key)) {
@@ -36,12 +82,11 @@ class GenusController extends Controller
             $funFact = $this->container->get('markdown.parser')->transform($funFact);
             $cache->save($key, $funFact);
         }
-
+        */
 
         //return Response object (render template with response object)
         return $this->render('genus/show.html.twig', [
-            'name' => $genusName,
-            'funFact' => $funFact,
+            'genus' => $genus
         ]);
     }
 
