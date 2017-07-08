@@ -10,7 +10,6 @@ namespace AppBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use AppBundle\Entity\Genus;
 use Nelmio\Alice\Fixtures;
 
 class LoadFixtures implements FixtureInterface

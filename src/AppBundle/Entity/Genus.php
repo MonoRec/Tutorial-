@@ -8,6 +8,8 @@
 
 namespace AppBundle\Entity;
 
+
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,6 +41,18 @@ class Genus
     private $speciesCount;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\GenusNote", mappedBy="genus")
+     * @ORM\OrderBy({"createdAt"="DESC"})
+     */
+    private $notes;
+
+    public function __construct()
+    {
+        $this->notes = new ArrayCollection();
+    }
+
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $funFact;
@@ -46,7 +60,15 @@ class Genus
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPublished;
+    private $isPublished = true;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return mixed
@@ -119,7 +141,7 @@ class Genus
     /**
      * @return mixed
      */
-    public function getisPublished()
+    public function getIsPublished()
     {
         return $this->isPublished;
     }
@@ -132,5 +154,12 @@ class Genus
         $this->isPublished = $isPublished;
     }
 
+    /**
+     * @return arrayCollection|GenusNote[]
+     */
+    public function getNote()
+    {
+        return $this->notes;
+    }
 
 }
