@@ -1,80 +1,79 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: BaTryXaaa
- * Date: 7/9/2017
- * Time: 12:36
- */
-
 namespace AppBundle\Entity;
-
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="user")
  */
 class User implements UserInterface
 {
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
      * @ORM\Column(type="string", unique=true)
      */
     private $email;
-
     /**
-     * @return mixed
+     * The encoded password
+     *
+     * @ORM\Column(type="string")
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
+    private $password;
     /**
-     * @return mixed
+     * A non-persisted field that's used to create the encoded password.
+     *
+     * @var string
      */
-    public function getEmail()
-    {
-        return $this->email;
-    }
+    private $plainPassword;
 
+    // needed by the security system
     public function getUsername()
     {
         return $this->email;
     }
-
     public function getRoles()
     {
         return ['ROLE_USER'];
     }
-
     public function getPassword()
     {
+        return $this->password;
     }
-
     public function getSalt()
     {
+        // leaving blank - I don't need/have a password!
     }
-
     public function eraseCredentials()
     {
+        $this->plainPassword = null;
     }
-
-    /**
-     * @param mixed $email
-     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
     public function setEmail($email)
     {
         $this->email = $email;
     }
-
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+        // forces the object to look "dirty" to Doctrine. Avoids
+        // Doctrine *not* saving this entity, if only plainPassword changes
+        $this->password = null;
+    }
 }
