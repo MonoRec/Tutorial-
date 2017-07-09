@@ -1,0 +1,11 @@
+{{ form_start(genus_form) }}
+                {{ form_row(genus_form.name) }}
+                {{ form_row(genus_form.subFamily) }}
+                {{ form_row(genus_form.speciesCount, {
+                    'label' : 'Number of Species'
+                }) }}
+                {{ form_row(genus_form.funFact) }}
+                {{ form_row(genus_form.isPublished) }}
+                {{ form_row(genus_form.firstDiscoveredAt) }}
+<button type="submit" class="btn btn-primary" formnovalidate> {{ buttonText }}</button>
+{{ form_end(genus_form) }}
