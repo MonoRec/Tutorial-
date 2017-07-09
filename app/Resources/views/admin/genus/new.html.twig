@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+
+    <script>
+        jQuery(document).ready(function () {
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+        });
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>New Genus</h1>
+
+                {{ form_start(genus_form) }}
+                {{ form_widget(genus_form) }}
+                <button type="submit" class="btn btn-primary"> Save</button>
+                {{ form_end(genus_form) }}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

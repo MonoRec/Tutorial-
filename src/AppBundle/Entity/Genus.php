@@ -31,7 +31,8 @@ class Genus
     private $name;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\SubFamily")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $subFamily;
 
@@ -51,6 +52,26 @@ class Genus
         $this->notes = new ArrayCollection();
     }
 
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $firstDiscoveredAt;
+
+    /**
+     * @return mixed
+     */
+    public function getFirstDiscoveredAt()
+    {
+        return $this->firstDiscoveredAt;
+    }
+
+    /**
+     * @param mixed $firstDiscoveredAt
+     */
+    public function setFirstDiscoveredAt($firstDiscoveredAt)
+    {
+        $this->firstDiscoveredAt = $firstDiscoveredAt;
+    }
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -61,6 +82,7 @@ class Genus
      * @ORM\Column(type="boolean")
      */
     private $isPublished = true;
+
 
     /**
      * @return mixed
@@ -97,7 +119,7 @@ class Genus
     /**
      * @param mixed $subFamily
      */
-    public function setSubFamily($subFamily)
+    public function setSubFamily(SubFamily $subFamily = null)
     {
         $this->subFamily = $subFamily;
     }
