@@ -8,7 +8,6 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\User;
 use AppBundle\Form\UserRegistrationForm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -26,20 +25,26 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
-        if($form->isValid()) {
-            /** @var User $user */
-             $user = $form->getData();
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($user);
-                $em->flush();
+        if ($form->isValid()) {
 
-                $this->addFlash('success', 'Welcome'.$user->getEmail());
-                return $this->redirectToRoute('homepage');
+            /** @var User $user */
+            $user = $form->getData();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'Welcome' . $user->getEmail());
+
+            return $this->get('security.authentication.guard_handler')
+                ->authenticateUserAndHandleSuccess(
+                    $user,
+                    $request,
+                    $this->get('app.security.login_form_authenticator'),
+                    'main'
+                );
         }
 
-
-
-        return $this->render('user/registration.html.twig',[
+        return $this->render('user/registration.html.twig', [
             'form' => $form->createView()
         ]);
     }
